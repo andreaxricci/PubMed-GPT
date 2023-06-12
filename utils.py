@@ -1,9 +1,14 @@
 from langchain import PromptTemplate
 from langchain.llms import OpenAI
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.chains.question_answering import load_qa_chain
+from langchain.chains import ChatVectorDBChain, LLMChain
+from langchain.chat_models import ChatOpenAI
+
 from dotenv import load_dotenv, find_dotenv
-import requests
 from metapub import PubMedFetcher
 import pandas as pd
+import os
 
 
 keyword = 'CKD'
@@ -23,7 +28,6 @@ def get_pubmed_articles(query,max_nr_results):
 def get_details(pm_ids):
     """Get details from PubMed article ID"""
     fetch = PubMedFetcher()
-
     articles = pd.DataFrame(columns=['pmid','title','year','abstract','citation','url'])
 
     for pmid in range(len(pm_ids)):
@@ -37,7 +41,46 @@ def get_details(pm_ids):
     return articles
 
 
-a = get_pubmed_articles(keyword,3)
-print(a)
-b = get_details(a)
-print(b)
+def text_split(text):
+    """Split text into chunks of fixed size"""
+    text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size = 2048,
+    chunk_overlap  = 20,
+    length_function = len,
+    )
+
+    text_chunks = text_splitter.create_documents([text])
+
+    return text_chunks
+
+
+def get_query_from_question(question, model_name, openai_api_key):
+    """Get a PubMed search query from a question"""
+    template = """Given a question, your task is to come up with a relevant search term that would retrieve relevant articles from a scientific article database. The search term should not be so specific as to be unlikely to retrieve any articles, but should also not be so general as to retrieve too many articles. The search term should be a single word or phrase, and should not contain any punctuation. Convert any initialisms to their full form.
+    Question: What are some treatments for diabetic macular edema?
+    Search Query: diabetic macular edema
+    Question: What is the workup for a patient with a suspected pulmonary embolism?
+    Search Query: pulmonary embolism treatment
+    Question: What is the recommended treatment for a grade 2 PCL tear?
+    Search Query: posterior cruciate ligament tear
+    Question: What are the possible complications associated with type 1 diabetes and how does it impact the eyes?
+    Search Query: type 1 diabetes eyes
+    Question: When is an MRI recommended for a concussion?
+    Search Query: concussion magnetic resonance imaging
+    Question: {question}
+    Search Query: """
+    prompt = PromptTemplate(template=template, input_variables=["question"])
+    llm_chain = LLMChain(prompt=prompt, llm=ChatOpenAI(model_name=model_name, openai_api_key=openai_api_key))
+    query = llm_chain.run(question)
+
+    return query
+
+load_api_keys()
+openai_api_key = os.getenv('OPENAI_API_KEY')
+
+question = 'What are some treatments for diabetic macular edema?'
+query = get_query_from_question(question, 'gpt-3.5-turbo', openai_api_key)
+articles = get_pubmed_articles(query,3)
+results = get_details(articles)
+
+print(results)
