@@ -1,0 +1,10 @@
+pylint
+pytest
+pytest-cov
+click
+python-dotenv
+langchain
+openai
+black
+metapub
+pandas
