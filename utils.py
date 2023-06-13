@@ -8,10 +8,6 @@ from langchain.chat_models import ChatOpenAI
 from dotenv import load_dotenv, find_dotenv
 from metapub import PubMedFetcher
 import pandas as pd
-import os
-
-
-keyword = 'CKD'
 
 # Load API keys from local environment
 def load_api_keys():
@@ -74,13 +70,3 @@ def get_query_from_question(question, model_name, openai_api_key):
     query = llm_chain.run(question)
 
     return query
-
-load_api_keys()
-openai_api_key = os.getenv('OPENAI_API_KEY')
-
-question = 'What are some treatments for diabetic macular edema?'
-query = get_query_from_question(question, 'gpt-3.5-turbo', openai_api_key)
-articles = get_pubmed_articles(query,3)
-results = get_details(articles)
-
-print(results)
