@@ -4,6 +4,8 @@ pytest-cov
 click
 python-dotenv
 langchain
+chromadb==0.3.10
+tiktoken
 openai
 black
 metapub
