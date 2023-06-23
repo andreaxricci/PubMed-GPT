@@ -10,7 +10,8 @@ If results are found, the system leverages a LLM to provide a summarised answer 
 
 The screenshot below shows an example of the frontent, built with Streamlit:
 
-<img width="1292" alt="Screenshot 2023-06-23 at 09 13 28" src="https://github.com/andreaxricci/PubMed-LLM/assets/62494809/fa06c5fa-fc0e-4c2a-8f42-43e6cb638922">
+<img width="1283" alt="Screenshot 2023-06-23 at 09 59 42" src="https://github.com/andreaxricci/PubMed-LLM/assets/62494809/5be7c61a-f795-4535-ad60-3c957121cf4a">
+
 
 In order to reproduce this, it is required to specify the following API keys in a .env file:
 
