@@ -1,14 +1,13 @@
 from langchain import PromptTemplate
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.chains.question_answering import load_qa_chain
 from langchain.chains import ChatVectorDBChain, LLMChain
 from langchain.chains.chat_vector_db.prompts import CONDENSE_QUESTION_PROMPT
 from langchain.chains.conversational_retrieval.base import _get_chat_history
+from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
 from langchain.docstore.document import Document
-
-from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import Chroma
 
 from dotenv import load_dotenv, find_dotenv
 from metapub import PubMedFetcher
