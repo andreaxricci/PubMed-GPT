@@ -86,7 +86,7 @@ def get_abstracts(articles):
         docs.append(Document(page_content=articles['abstract'][a], 
                              metadata={"citation": articles['citation'][a],
                                        "source": articles['pmid'][a],
-                                       "url": articles['citation'][a] +" [link]("+ articles['url'][a] + ")",
+                                       "url": "pmid " + articles['pmid'][a] +": "+ articles['citation'][a] +" [link]("+ articles['url'][a] + ")",
                                        "pmid": articles['pmid'][a]}))
     
     return docs
