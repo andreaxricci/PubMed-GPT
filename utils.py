@@ -2,6 +2,7 @@ from langchain import PromptTemplate
 from langchain.chains import ChatVectorDBChain, LLMChain
 from langchain.chains.chat_vector_db.prompts import CONDENSE_QUESTION_PROMPT
 from langchain.chains.conversational_retrieval.base import _get_chat_history
+from langchain.chains.qa_with_sources import load_qa_with_sources_chain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
 from langchain.docstore.document import Document
@@ -12,6 +13,8 @@ from langchain.vectorstores import Chroma
 from dotenv import load_dotenv, find_dotenv
 from metapub import PubMedFetcher
 import pandas as pd
+
+from prompts import STUFF_PROMPT
 
 NUM_CHUNKS = 5
 
@@ -82,6 +85,7 @@ def get_abstracts(articles):
     for a in range(len(articles)):
         docs.append(Document(page_content=articles['abstract'][a], 
                              metadata={"citation": articles['citation'][a],
+                                       "source": articles['pmid'][a],
                                        "url": articles['citation'][a] +" [link]("+ articles['url'][a] + ")",
                                        "pmid": articles['pmid'][a]}))
     
@@ -99,9 +103,10 @@ def get_chat_answer(user_input, text_chunks, model_name, openai_api_key, st_sess
     llm=ChatOpenAI(model_name=model_name, openai_api_key=openai_api_key)
     question_generator = LLMChain(llm=llm, prompt=CONDENSE_QUESTION_PROMPT)
 
-    doc_chain = load_qa_chain(llm, chain_type="stuff")
+    #doc_chain = load_qa_chain(llm, chain_type="stuff")
+    doc_chain = load_qa_with_sources_chain(llm, chain_type="stuff",prompt=STUFF_PROMPT)
 
-    vectorstore = Chroma.from_documents(text_chunks, OpenAIEmbeddings(openai_api_key=openai_api_key), ids=[doc.metadata["citation"] for doc in text_chunks])
+    vectorstore = Chroma.from_documents(text_chunks, OpenAIEmbeddings(openai_api_key=openai_api_key), ids=[doc.metadata["source"] for doc in text_chunks])
     chain = ChatVectorDBChain(
         vectorstore=vectorstore,
         question_generator=question_generator,
