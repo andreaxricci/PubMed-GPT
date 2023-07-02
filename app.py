@@ -7,6 +7,7 @@ from utils import get_query_from_question, load_api_keys, get_pubmed_articles, g
 
 max_nr_results = 3
 model = 'gpt-3.5-turbo'
+#model = 'gpt-4'
 
 st.set_page_config(
     page_title="PubMed Chat",
@@ -14,6 +15,7 @@ st.set_page_config(
 )
 
 st.header("PubMed Chat")
+st.text("Simple demo - results have not been medically validated")
 
 if 'generated' not in st.session_state:
     st.session_state['generated'] = []

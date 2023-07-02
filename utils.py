@@ -33,7 +33,7 @@ def get_pubmed_articles(query,max_nr_results):
 def get_details(pm_ids):
     """Get details from PubMed article ID"""
     fetch = PubMedFetcher()
-    articles = pd.DataFrame(columns=['pmid','title','year','abstract','citation','url'])
+    articles = pd.DataFrame(columns=['pmid','title','year','abstract','citation','content','url'])
 
     for pmid in range(len(pm_ids)):
         articles.loc[pmid] = [pm_ids[pmid],
@@ -41,7 +41,9 @@ def get_details(pm_ids):
                               fetch.article_by_pmid(pm_ids[pmid]).year,
                               fetch.article_by_pmid(pm_ids[pmid]).abstract,
                               fetch.article_by_pmid(pm_ids[pmid]).citation,
+                              fetch.article_by_pmid(pm_ids[pmid]).content,
                               "https://pubmed.ncbi.nlm.nih.gov/"+pm_ids[pmid]+"/"]
+    
     return articles
 
 
