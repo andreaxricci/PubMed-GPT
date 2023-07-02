@@ -10,8 +10,7 @@ If results are found, the system leverages a LLM to provide a summarised answer 
 
 The screenshot below shows an example of the frontent, built with Streamlit:
 
-<img width="1269" alt="Screenshot 2023-07-02 at 17 58 37" src="https://github.com/andreaxricci/PubMed-GPT/assets/62494809/4656cc78-079d-4a41-9530-691513959ef4">
-
+<img width="1440" alt="Screenshot 2023-07-02 at 21 46 09" src="https://github.com/andreaxricci/PubMed-GPT/assets/62494809/ef6910c7-a482-4b78-8c92-e7ea8ff10160">
 
 
 
