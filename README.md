@@ -19,3 +19,8 @@ In order to reproduce this, it is required to specify the following API keys in 
 - OPENAI_API_KEY=... (Used for the LLM calls via Langchain)
 - NCBI_API_KEY=... (Used for the metapub search. You can request one here: https://support.nlm.nih.gov/knowledgebase/article/KA-05317/en-us)
 
+## To Do's
+
+- Add exceptions handling
+- Incorporate full text of articles, on top of abstracts
+- Add hyperlinks from citations to articles
